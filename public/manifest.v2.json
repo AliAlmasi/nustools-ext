@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "NUSTools",
+  "version": "0.0.1",
+  "description": "",
+  "homepage_url": "https://github.com/alialmasi/nustools-ext",
+  "author": "Ali Almasi",
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "19": "icons/19.png",
+      "38": "icons/38.png"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "permissions": ["activeTab", "tabs"],
+  "icons": {
+    "48": "icons/48.png",
+    "96": "icons/96.png"
+  },
+  "web_accessible_resources": ["*.woff2"],
+  "browser_specific_settings": {
+    "gecko": {
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}
