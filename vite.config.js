@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 const rootPath = (address = "") =>
-  address ? path.resolve(__dirname, address.trim()) : __dirname;
+  address.trim() !== "" ? path.resolve(__dirname, address.trim()) : __dirname;
 
 export default defineConfig(({ mode }) => {
   const isMv3 = mode === "mv3";
@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
         targets: [
           { src: manifestFile, dest: ".", rename: "manifest.json" },
           { src: "public/icons", dest: "." },
+          { src: "README.md", dest: "." },
         ],
       }),
     ],
