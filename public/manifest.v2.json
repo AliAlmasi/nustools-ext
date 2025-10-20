@@ -6,20 +6,32 @@
   "homepage_url": "https://github.com/alialmasi/nustools-ext",
   "author": "Ali Almasi",
   "browser_action": {
-    "default_popup": "index.html",
     "default_icon": {
       "19": "icons/19.png",
-      "38": "icons/38.png"
+      "38": "icons/38.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png",
+      "96": "icons/96.png",
+      "128": "icons/128.png"
     }
   },
   "background": {
     "scripts": ["background.js"],
     "persistent": true
   },
-  "permissions": ["activeTab", "tabs"],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
+  ],
   "icons": {
+    "19": "icons/19.png",
+    "38": "icons/38.png",
     "48": "icons/48.png",
-    "96": "icons/96.png"
+    "64": "icons/64.png",
+    "96": "icons/96.png",
+    "128": "icons/128.png"
   },
   "web_accessible_resources": ["*.woff2"],
   "browser_specific_settings": {

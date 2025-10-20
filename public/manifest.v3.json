@@ -6,21 +6,45 @@
   "homepage_url": "https://github.com/alialmasi/nustools-ext",
   "author": "Ali Almasi",
   "action": {
-    "default_popup": "index.html",
     "default_icon": {
       "19": "icons/19.png",
-      "38": "icons/38.png"
+      "38": "icons/38.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png",
+      "96": "icons/96.png",
+      "128": "icons/128.png"
     }
   },
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://bustan.nus.ac.ir/*",
+        "*://localhost/*",
+        "*://127.0.0.1/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
   "icons": {
+    "19": "icons/19.png",
+    "38": "icons/38.png",
     "48": "icons/48.png",
-    "96": "icons/96.png"
+    "64": "icons/64.png",
+    "96": "icons/96.png",
+    "128": "icons/128.png"
   },
-  "permissions": ["activeTab", "scripting", "tabs"],
-  "host_permissions": ["https://bustan.nus.ac.ir/*", "https://nustools.ir"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
+  ],
+  "host_permissions": ["https://bustan.nus.ac.ir/*", "https://nustools.ir/*"],
   "web_accessible_resources": [
     {
       "resources": ["*.woff2"],
