@@ -22,8 +22,9 @@
     {
       "matches": [
         "https://bustan.nus.ac.ir/*",
-        "*://localhost/*",
-        "*://127.0.0.1/*"
+        "https://bustan.tvu.ac.ir/*",
+        "*://localhost:*/*", //! debug
+        "*://127.0.0.1:*/*" //! debug
       ],
       "js": ["content.js"],
       "run_at": "document_start"
@@ -44,10 +45,16 @@
     "declarativeNetRequest",
     "declarativeNetRequestFeedback"
   ],
-  "host_permissions": ["https://bustan.nus.ac.ir/*", "https://nustools.ir/*"],
+  "host_permissions": [
+    "https://bustan.nus.ac.ir/*",
+    "https://bustan.tvu.ac.ir/*",
+    "https://nustools.ir/*",
+    "*://localhost:*/*", //! debug
+    "*://127.0.0.1:*/*" //! debug
+  ],
   "web_accessible_resources": [
     {
-      "resources": ["*.woff2"],
+      "resources": ["*.woff2", "page_inject.js"],
       "matches": ["<all_urls>"]
     }
   ]
