@@ -1,41 +1,23 @@
-const originalFetch = window.fetch;
+import main from "./main";
 
-window.fetch = async (...args) => {
-  const [url, options] = args;
+try {
+  chrome.runtime.sendMessage({
+    action: "injectPageScript",
+    file: "page_inject.js",
+  });
+} catch (e) {
+  const script = document.createElement("script");
+  script.src = chrome.runtime.getURL("page_inject.js");
+  script.onload = () => script.remove();
+  (document.head || document.documentElement).prepend(script);
+}
+
+window.addEventListener("message", (event) => {
+  if (!event.data || !event.data.__nustools) return;
 
   try {
-    if (typeof url === "string" && url.includes("bustan.nus.ac.ir")) {
-      console.log(
-        "%c[Bustan Fetch Listener]",
-        "color: #00ff99",
-        "Detected fetch →",
-        url
-      );
-      console.log("Options:", options);
-    }
+    main();
   } catch (err) {
-    console.warn("Error in fetch listener:", err);
+    console.warn("Error handling page fetch/xhr message:", err);
   }
-
-  return originalFetch.apply(this, args);
-};
-
-const origOpen = XMLHttpRequest.prototype.open;
-XMLHttpRequest.prototype.open = function (...args) {
-  const [method, url] = args;
-  if (
-    url &&
-    (url.includes("bustan.nus.ac.ir") ||
-      url.includes("127.0.0.1") ||
-      url.includes("localhost"))
-  ) {
-    console.log(
-      "%c[Bustan Fetch Listener]",
-      "color: #00ff99",
-      `XHR → ${method} ${url}`
-    );
-  }
-  return origOpen.apply(this, args);
-};
-
-console.log("%c[Bustan Fetch Listener active]", "color: #00ff99");
+});
