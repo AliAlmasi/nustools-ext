@@ -7,6 +7,13 @@ const rootPath = (address = "") =>
 
 export default defineConfig(({ mode }) => {
   const isMv3 = mode === "mv3";
+  console.log(
+    isMv3
+      ? ">> Building manifest version 3 in /dist/mv3"
+      : ">> Building manifest version 2 in /dist/mv2"
+  );
+
+  console.log();
 
   const manifestFile = isMv3
     ? "public/manifest.v3.json"
@@ -22,6 +29,8 @@ export default defineConfig(({ mode }) => {
           { src: manifestFile, dest: ".", rename: "manifest.json" },
           { src: "public/icons", dest: "." },
           { src: "README.md", dest: "." },
+          { src: "src/main.js", dest: "." },
+          { src: "src/page_inject.js", dest: "." },
         ],
       }),
     ],
