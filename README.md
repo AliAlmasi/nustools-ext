@@ -1,4 +1,4 @@
-# NUSTools Browser Extension
+# NUSTools Browser Extension [![](https://wakatime.com/badge/user/42515572-c36c-44b6-9997-0a755ff94018/project/340de59b-f15d-4a38-b938-53e7bdb98980.svg?style=flat-square)](https://wakatime.com/@a710almasi/projects/cfnmrynsqg)
 
 This repository contains source code of the [NUSTools.ir](https://nustools.ir) browser extension.
 
