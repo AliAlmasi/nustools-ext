@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
         world: "MAIN",
       })
       .then((results) => {
-        console.debug("NUSTools injection result", results);
+        console.info("NUSTools injection result:", results);
       })
       .catch((err) => {
         console.error("NUSTools Failed to inject page script:", err);
@@ -36,4 +36,17 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   } catch (err) {
     console.error("NUSTools Failed to inject page script (sync):", err);
   }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.action !== "reloadPage") return;
+
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    if (!tab?.id) return;
+
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => window.location.reload(),
+    });
+  });
 });

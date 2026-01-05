@@ -14,10 +14,5 @@ try {
 
 window.addEventListener("message", (event) => {
   if (!event.data || !event.data.__nustools) return;
-
-  try {
-    main();
-  } catch (err) {
-    console.warn("Error handling page fetch/xhr message:", err);
-  }
+  else main();
 });

@@ -1,11 +1,13 @@
 (() => {
-  if (window.__nustools_injected) return;
-  window.__nustools_injected = true;
-
+  // * INJECT STATE CHECK
   try {
-    console.log("%c[NUSTools] loaded", "color: #00ff99");
-  } catch (e) {}
+    if (window.__nustools_injected) return;
+    window.__nustools_injected = true;
+  } catch (error) {
+    console.error("Error while checking for inject state:", error);
+  }
 
+  // * INJECTING MANIPULATED FETCH
   try {
     const orgFetch = window.fetch;
     window.fetch = async function (...args) {
@@ -15,8 +17,11 @@
       } catch (e) {}
       return orgFetch.apply(this, args);
     };
-  } catch (e) {}
+  } catch (e) {
+    console.error("Error while injecting fetch:", e);
+  }
 
+  // * INJECTING MANIPULATED XHR
   try {
     const orgXhrOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (...args) {
@@ -25,14 +30,10 @@
         const url = args[1];
         window.postMessage({ __nustools: true, type: "xhr", method, url }, "*");
       } catch (e) {}
+
       return orgXhrOpen.apply(this, args);
     };
-  } catch (e) {}
-
-  try {
-    window.testfetch = () =>
-      fetch("https://api.8.alialmasi.ir/v1/answers")
-        .then((res) => res.json())
-        .then((res) => console.log(res.status));
-  } catch (e) {}
+  } catch (e) {
+    console.error("Error while injecting xhr:", e);
+  }
 })();

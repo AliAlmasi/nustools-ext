@@ -13,19 +13,15 @@
       "64": "icons/64.png",
       "96": "icons/96.png",
       "128": "icons/128.png"
-    }
+    },
+    "default_popup": "popup/index.html"
   },
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://bustan.nus.ac.ir/*",
-        "https://bustan.tvu.ac.ir/*",
-        "*://localhost:*/*", //! debug
-        "*://127.0.0.1:*/*" //! debug
-      ],
+      "matches": ["https://bustan.nus.ac.ir/*", "https://bustan.tvu.ac.ir/*"],
       "js": ["content.js"],
       "run_at": "document_start"
     }
@@ -48,9 +44,7 @@
   "host_permissions": [
     "https://bustan.nus.ac.ir/*",
     "https://bustan.tvu.ac.ir/*",
-    "https://nustools.ir/*",
-    "*://localhost:*/*", //! debug
-    "*://127.0.0.1:*/*" //! debug
+    "https://nustools.ir/*"
   ],
   "web_accessible_resources": [
     {
