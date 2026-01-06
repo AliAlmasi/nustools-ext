@@ -37,21 +37,21 @@ jobs:
 
       - name: Zip Chrome build
         run: |
-          cd build
-          zip -r chrome.zip chrome
+          cd dist
+          zip -r chromium-mv3.zip mv3
 
       - name: Zip Firefox build
         run: |
-          cd build
-          zip -r firefox.zip firefox
+          cd dist
+          zip -r firefox-mv2.zip mv2
 
       - name: Upload to release (tag push)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/chrome.zip
-            build/firefox.zip
+            dist/chromium-mv3.zip
+            dist/firefox-mv2.zip
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,8 +71,8 @@ jobs:
         with:
           tag_name: ${{ steps.latest.outputs.tag }}
           files: |
-            build/chrome.zip
-            build/firefox.zip
+            dist/chromium-mv3.zip
+            dist/firefox-mv2.zip
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
