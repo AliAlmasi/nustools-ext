@@ -56,7 +56,6 @@ export default defineConfig(({ mode }) => {
         input: {
           background: rootPath("src/background.ts"),
           content: rootPath("src/content.ts"),
-          main: rootPath("src/main.ts"),
           page_inject: rootPath("src/page_inject.js"),
         },
         output: {
