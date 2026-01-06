@@ -139,6 +139,3 @@ dist
 .svelte-kit
 
 ### MANUAL ENTRIES ###
-
-# Temporarily disabling GitHub Action workflows.
-.github
