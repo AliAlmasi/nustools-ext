@@ -57,6 +57,9 @@ function main() {
     return button;
   };
 
+  /*
+  صفحه چاپ انتخاب واحد
+  */
   waitForDocument(() => {
     if (nustools__timetable()) {
       const header = document.querySelector(
@@ -95,6 +98,9 @@ function main() {
     }
   });
 
+  /*
+  صفحه گروه‌های درسی
+  */
   waitForDocument(() => {
     if (nustools__grid()?.value === "SER_Course_For_Student") {
       let toolbar = nustools__gridToolbar();
@@ -122,6 +128,9 @@ function main() {
     }
   });
 
+  /*
+  صفحه چاپ کارت دانشجویی
+  */
   waitForDocument(() => {
     if (nustools__studentCard()) {
       nustools__cardImage().style.setProperty(
@@ -133,6 +142,9 @@ function main() {
     }
   });
 
+  /*
+  صفحه نظرسنجی استادان
+  */
   waitForDocument(() => {
     if (nustools__surveyTable()) {
       const surveySelectAllRow = document.createElement("tr");
