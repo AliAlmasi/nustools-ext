@@ -23,7 +23,8 @@
     {
       "matches": ["https://bustan.nus.ac.ir/*", "https://bustan.tvu.ac.ir/*"],
       "js": ["content.js"],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "type": "module"
     }
   ],
   "icons": {
