@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "NUSTools",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "homepage_url": "https://github.com/alialmasi/nustools-ext",
   "author": "Ali Almasi",
