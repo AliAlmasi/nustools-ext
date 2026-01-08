@@ -88,7 +88,7 @@ function main() {
       });
 
       const sendToNusButton = nustools__createbutton();
-      sendToNusButton.textContent = "ارسال به NUSTools";
+      sendToNusButton.textContent = "ارسال به برنامه‌ساز NUSTools";
       sendToNusButton.addEventListener("click", (e) => {
         e.preventDefault();
         alert("این قابلیت در دست توسعه است.");
@@ -114,12 +114,12 @@ function main() {
         e.preventDefault();
         XlsxWriteFile(
           XlsxUtils.table_to_book(nustools__table()),
-          "nustools.xlsx"
+          "course_groups_bustan.xlsx"
         );
       });
 
       const sendToNusButton = nustools__createbutton();
-      sendToNusButton.textContent = "ارسال به NUSTools";
+      sendToNusButton.textContent = "ارسال به پیش‌انتخاب واحد NUSTools";
       sendToNusButton.addEventListener("click", (e) =>
         alert("این قابلیت در دست توسعه است.")
       );
@@ -156,6 +156,7 @@ function main() {
   <th style="width:30px;text-align:center;vertical-align:bottom;">*</th>
   <th style="width:400px;text-align:center">
     پرکردن خودکار (افزونه NUSTools)
+    <span style="font-size:14px">روی اعداد کلیک کنید</span>
   </th>
 
   ${[8, 7, 6, 5, 4, 3, 2, 1]
