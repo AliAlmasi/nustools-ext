@@ -79,10 +79,11 @@ function main() {
       copyTimeTable.addEventListener("click", (e) => {
         e.preventDefault();
         let firstElement = tbody.firstElementChild!;
-        firstElement.setAttribute("hidden", "true");
+        let temp = firstElement.innerHTML;
+        firstElement.innerHTML = "";
         navigator.clipboard.writeText(tbody.textContent).then(() => {
           alert("کپی شد");
-          firstElement.removeAttribute("hidden");
+          firstElement.innerHTML = temp;
         });
       });
 
