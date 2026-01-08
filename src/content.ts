@@ -87,6 +87,13 @@ function main() {
         });
       });
 
+      const downloadExcel = nustools__createbutton();
+      downloadExcel.textContent = "دانلود فایل اکسل";
+      downloadExcel.addEventListener("click", (e) => {
+        e.preventDefault();
+        XlsxWriteFile(XlsxUtils.table_to_book(tbody), "timetable_bustan.xlsx");
+      });
+
       const sendToNusButton = nustools__createbutton();
       sendToNusButton.textContent = "ارسال به برنامه‌ساز NUSTools";
       sendToNusButton.addEventListener("click", (e) => {
@@ -95,6 +102,7 @@ function main() {
       });
 
       header.appendChild(copyTimeTable);
+      header.appendChild(downloadExcel);
       header.appendChild(sendToNusButton);
     }
   });
