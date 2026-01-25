@@ -10,7 +10,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 const minify = true;
 
 /**
- *
+ * This function is used for addressing paths of source files
  * @param address Specifies the relative address of a file
  * @returns Absolute address of the file
  */
