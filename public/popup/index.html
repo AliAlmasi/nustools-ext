@@ -77,7 +77,10 @@
       }
 
       button,
-      #button {
+      a.button,
+      a.button:hover,
+      a.button:visited,
+      a.button:active {
         border: 1px solid currentColor;
         border-radius: 0.4rem;
         background: inherit;
@@ -87,10 +90,23 @@
         cursor: pointer;
       }
 
+      :disabled,
+      button:disabled,
+      a.button:disabled {
+        border-color: #444;
+        color: #bbb;
+      }
+
       .buttons {
         display: flex;
         gap: 0.8rem;
         margin: 1rem 0;
+      }
+
+      .footer {
+        font-size: 1.3rem;
+        color: #aaa;
+        margin-bottom: -1rem;
       }
     </style>
   </head>
@@ -100,15 +116,30 @@
       <h2>دانشگاه فنی و حرفه‌ای</h2>
       <div class="buttons">
         <a
-          id="button"
+          class="button"
           href="https://bustan.tvu.ac.ir/"
           target="_blank"
           rel="noopener noreferrer"
           >سامانه بوستان</a
         >
-        <!-- <button id="reload">بارگذاری مجدد</button> -->
+        <a
+          class="button"
+          href="https://github.com/alialmasi/nustools-ext/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          >ثبت مشکل افزونه</a
+        >
+        <!-- <button id="update">بروزرسانی افزونه</button> -->
       </div>
       <ul>
+        <!-- <li>
+          <a
+            href="https://github.com/alialmasi/nustools-ext/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            >ثبت باگ افزونه</a
+          >
+        </li> -->
         <li>
           <a
             href="https://alialmasi.ir/fa"
@@ -126,11 +157,49 @@
           >
         </li>
       </ul>
+      <p class="footer">نسخه <span id="version"></span></p>
+      <p class="footer">
+        ساخته شده با ❤️ و ☕ در
+        <a href="#" target="_blank" rel="noopener noreferrer">شمسی‌پور تهران</a>
+      </p>
     </main>
     <script>
+      function newtab(href) {
+        const a = document.createElement("a");
+        a.href = href;
+        a.setAttribute("target", "_blank");
+        a.click();
+        a.remove();
+      }
+
+      const currentVersion = "v0.0.7"; // parse from manifest file
+
+      document.addEventListener(
+        "DOMContentLoaded",
+        () =>
+          (document.getElementById("version").textContent =
+            currentVersion.slice(1))
+      );
+
+      const updateButton = document.getElementById("update");
+      const showLatestVersionMessage = () => {
+        const oldTextContent = updateButton.textContent;
+        updateButton.textContent = "نیازی نیست :)";
+        updateButton.setAttribute("disabled", "true");
+        console.log("clicked");
+
+        setTimeout(() => {
+          updateButton.textContent = oldTextContent;
+          updateButton.removeAttribute("disabled");
+        }, 2 * 1000);
+      };
+
       document.addEventListener("contextmenu", (e) => e.preventDefault());
-      document.getElementById("reload").addEventListener("click", () => {
-        chrome.runtime.sendMessage({ action: "reloadPage" });
+      updateButton.addEventListener("click", () => {
+        const latestVersion = "v0.0.7"; // fetch from github latest tag
+        if (currentVersion === latestVersion) showLatestVersionMessage();
+        else
+          newtab("https://github.com/alialmasi/nustools-ext/releases/latest");
       });
     </script>
   </body>
