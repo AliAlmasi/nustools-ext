@@ -1,13 +1,14 @@
 (() => {
-  // * INJECT STATE CHECK
+  //#region INJECT STATE CHECK
   try {
     if (window.__nustools_injected) return;
     window.__nustools_injected = true;
   } catch (error) {
     console.error("Error while checking for inject state:", error);
   }
+  //#endregion
 
-  // * INJECTING MANIPULATED FETCH
+  //#region INJECTING MANIPULATED FETCH
   try {
     const orgFetch = window.fetch;
     window.fetch = async function (...args) {
@@ -20,8 +21,9 @@
   } catch (e) {
     console.error("Error while injecting fetch:", e);
   }
+  //#endregion
 
-  // * INJECTING MANIPULATED XHR
+  //#region INJECTING MANIPULATED XHR
   try {
     const orgXhrOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (...args) {
@@ -36,4 +38,5 @@
   } catch (e) {
     console.error("Error while injecting xhr:", e);
   }
+  //#endregion
 })();
