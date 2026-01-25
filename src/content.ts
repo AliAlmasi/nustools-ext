@@ -130,7 +130,9 @@ function main(): void {
   const nustools__timetable = (): HTMLInputElement =>
     document.querySelector("input[type='hidden']#SelectedSER_CourseGroupIDs")!;
   const nustools__examCard = (): HTMLDivElement =>
-    document.querySelector("#divContainer > div:nth-child(5)[align='center']")!;
+    document.querySelector(
+      "#divContainer > div:nth-child(5)[align='center']:not([class])"
+    )!;
   const nustools__boxHeader = (): HTMLDivElement =>
     document.querySelector("#divContainer > div.box-header")!;
 
