@@ -1,0 +1,103 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: normal;
+  user-select: none !important;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./Vazirmatn-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./Vazirmatn-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+html {
+  font-size: 62.5%;
+  width: 500px;
+  height: 400px;
+  overflow: hidden;
+  border: 1px solid black;
+  direction: rtl;
+  background-color: #252525;
+  color: white;
+}
+
+:link,
+:visited,
+:link:hover,
+:link:active {
+  color: #387ee7;
+  text-decoration: none;
+}
+
+body {
+  font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+  min-height: 100%;
+  font-family: "Vazirmatn" !important;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  gap: 1.4rem;
+}
+
+ul > li + li {
+  border-right: 0.2rem solid currentColor;
+  padding-right: 1.4rem;
+}
+
+button,
+a.button,
+a.button:hover,
+a.button:visited,
+a.button:active {
+  border: 1px solid currentColor;
+  border-radius: 0.4rem;
+  background: inherit;
+  font: inherit;
+  color: inherit;
+  padding: 0.4rem 1.4rem;
+  cursor: pointer;
+}
+
+:disabled,
+button:disabled,
+a.button:disabled {
+  border-color: #444;
+  color: #bbb;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.footer {
+  font-size: 1.3rem;
+  color: #aaa;
+  margin-bottom: -1rem;
+}
