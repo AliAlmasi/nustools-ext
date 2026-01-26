@@ -14,7 +14,10 @@
     window.fetch = async function (...args) {
       try {
         const url = args[0];
-        window.postMessage({ __nustools: true, type: "fetch", url }, "*");
+        window.postMessage(
+          { __nustools: true, type: "fetch", url },
+          window.location.origin
+        );
       } catch (e) {}
       return orgFetch.apply(this, args);
     };
@@ -30,7 +33,10 @@
       try {
         const method = args[0];
         const url = args[1];
-        window.postMessage({ __nustools: true, type: "xhr", method, url }, "*");
+        window.postMessage(
+          { __nustools: true, type: "xhr", method, url },
+          window.location.origin
+        );
       } catch (e) {}
 
       return orgXhrOpen.apply(this, args);
