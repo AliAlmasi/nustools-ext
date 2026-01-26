@@ -4,7 +4,6 @@
   "version": "0.0.7",
   "description": "",
   "homepage_url": "https://github.com/alialmasi/nustools-ext",
-  "author": "Ali Almasi",
   "action": {
     "default_icon": {
       "19": "icons/19.png",
@@ -23,8 +22,7 @@
     {
       "matches": ["https://bustan.nus.ac.ir/*", "https://bustan.tvu.ac.ir/*"],
       "js": ["content.js"],
-      "run_at": "document_start",
-      "type": "module"
+      "run_at": "document_idle"
     }
   ],
   "icons": {
@@ -35,22 +33,15 @@
     "96": "icons/96.png",
     "128": "icons/128.png"
   },
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "tabs",
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
-  ],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "host_permissions": [
     "https://bustan.nus.ac.ir/*",
-    "https://bustan.tvu.ac.ir/*",
-    "https://nustools.ir/*"
+    "https://bustan.tvu.ac.ir/*"
   ],
   "web_accessible_resources": [
     {
       "resources": ["*.woff2", "page_inject.js"],
-      "matches": ["<all_urls>"]
+      "matches": ["https://bustan.nus.ac.ir/*", "https://bustan.tvu.ac.ir/*"]
     }
   ]
 }

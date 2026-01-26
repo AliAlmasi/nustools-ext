@@ -13,17 +13,18 @@
       "64": "icons/64.png",
       "96": "icons/96.png",
       "128": "icons/128.png"
-    }
+    },
+    "default_popup": "popup/index.html"
   },
   "background": {
     "scripts": ["background.js"],
-    "persistent": true
+    "persistent": false
   },
   "permissions": [
     "activeTab",
     "tabs",
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "https://bustan.nus.ac.ir/*",
+    "https://bustan.tvu.ac.ir/*"
   ],
   "icons": {
     "19": "icons/19.png",
@@ -33,7 +34,7 @@
     "96": "icons/96.png",
     "128": "icons/128.png"
   },
-  "web_accessible_resources": ["*.ttf"],
+  "web_accessible_resources": ["*.woff2", "page_inject.js"],
   "browser_specific_settings": {
     "gecko": {
       "data_collection_permissions": {
