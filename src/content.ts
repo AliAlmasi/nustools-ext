@@ -139,7 +139,7 @@ function main(): void {
   //#endregion
 
   //#region منو پروفایل بالای صفحه
-  waitForDocument(() => {
+  function addDropdownItems(): void {
     const dropdown = document.querySelector(
       "div.dropdown-menu > ul.list-unstyled"
     );
@@ -164,172 +164,159 @@ function main(): void {
 
       dropdown.append(element);
     }
-  });
+  }
   //#endregion
 
   //#region صفحه چاپ انتخاب واحد
-  waitForDocument(() => {
-    if (nustools__timetable()) {
-      const header = document.querySelector(
-        "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header"
-      )! as HTMLElement;
-      header.innerHTML = "";
-      Object.assign(header.style, {
-        display: "flex",
-        gap: "1rem",
+  function CoursesViewPage(): void {
+    const header = document.querySelector(
+      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header"
+    )! as HTMLElement;
+    header.innerHTML = "";
+    Object.assign(header.style, {
+      display: "flex",
+      gap: "1rem",
+    });
+
+    const tbody = document.querySelector(
+      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody"
+    )!;
+
+    const copyTimeTable = nustools__createbutton("کپی جدول زمانی");
+    copyTimeTable.addEventListener("click", (e) => {
+      e.preventDefault();
+      const firstElement = tbody.firstElementChild!;
+      const temp = firstElement.innerHTML;
+      firstElement.innerHTML = "";
+      navigator.clipboard.writeText(tbody.textContent).then(() => {
+        alert("کپی شد");
+        firstElement.innerHTML = temp;
       });
+    });
 
-      const tbody = document.querySelector(
-        "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody"
-      )!;
-
-      const copyTimeTable = nustools__createbutton("کپی جدول زمانی");
-      copyTimeTable.addEventListener("click", (e) => {
-        e.preventDefault();
-        const firstElement = tbody.firstElementChild!;
-        const temp = firstElement.innerHTML;
-        firstElement.innerHTML = "";
-        navigator.clipboard.writeText(tbody.textContent).then(() => {
-          alert("کپی شد");
-          firstElement.innerHTML = temp;
-        });
-      });
-
-      const downloadExcel = nustools__createbutton("دانلود فایل اکسل");
-      downloadExcel.addEventListener("click", (e) => {
-        e.preventDefault();
-        XlsxWriteFile(
-          XlsxUtils.table_to_book(tbody),
-          "timetable_bustan.nustools.xlsx"
-        );
-      });
-
-      const sendToNusButton = nustools__createbutton(
-        "ارسال به برنامه‌ساز NUSTools"
+    const downloadExcel = nustools__createbutton("دانلود فایل اکسل");
+    downloadExcel.addEventListener("click", (e) => {
+      e.preventDefault();
+      XlsxWriteFile(
+        XlsxUtils.table_to_book(tbody),
+        "timetable_bustan.nustools.xlsx"
       );
-      sendToNusButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        alert("این قابلیت در دست توسعه است.");
-      });
+    });
 
-      header.appendChild(copyTimeTable);
-      header.appendChild(downloadExcel);
-      header.appendChild(sendToNusButton);
-    }
-  });
+    const sendToNusButton = nustools__createbutton(
+      "ارسال به برنامه‌ساز NUSTools"
+    );
+    sendToNusButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("این قابلیت در دست توسعه است.");
+    });
+
+    header.appendChild(copyTimeTable);
+    header.appendChild(downloadExcel);
+    header.appendChild(sendToNusButton);
+  }
   //#endregion
 
   //#region صفحه گروه‌های درسی
-  waitForDocument(() => {
-    if (nustools__grid()?.value === "SER_Course_For_Student") {
-      const toolbar = nustools__gridToolbar();
-      toolbar.innerHTML = "";
-      toolbar.style.gap = "1rem";
+  function CoursesPage(): void {
+    const toolbar = nustools__gridToolbar();
+    toolbar.innerHTML = "";
+    toolbar.style.gap = "1rem";
 
-      const downloadButton = nustools__createbutton("دانلود فایل اکسل");
-      downloadButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        XlsxWriteFile(
-          XlsxUtils.table_to_book(nustools__table()),
-          "course_groups_bustan.nustools.xlsx"
-        );
-      });
-
-      const sendToNusButton = nustools__createbutton(
-        "ارسال به پیش‌انتخاب واحد NUSTools"
+    const downloadButton = nustools__createbutton("دانلود فایل اکسل");
+    downloadButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      XlsxWriteFile(
+        XlsxUtils.table_to_book(nustools__table()),
+        "course_groups_bustan.nustools.xlsx"
       );
-      sendToNusButton.addEventListener("click", (e) =>
-        alert("این قابلیت در دست توسعه است.")
-      );
+    });
 
-      toolbar.appendChild(downloadButton);
-      toolbar.appendChild(sendToNusButton);
-    }
-  });
+    const sendToNusButton = nustools__createbutton(
+      "ارسال به پیش‌انتخاب واحد NUSTools"
+    );
+    sendToNusButton.addEventListener("click", (e) =>
+      alert("این قابلیت در دست توسعه است.")
+    );
+
+    toolbar.appendChild(downloadButton);
+    toolbar.appendChild(sendToNusButton);
+  }
   //#endregion
 
   //#region صفحه کارت دانشجویی
-  waitForDocument(() => {
-    if (nustools__studentCard()) {
-      nustools__boxHeader().innerHTML = "";
-      nustools__studentCard().style.margin = "0";
-      nustools__studentCard().style.width = "fit-content";
-      nustools__studentCard().style.padding = "2rem";
+  function StudentCardPage(): void {
+    nustools__boxHeader().innerHTML = "";
+    nustools__studentCard().style.margin = "0";
+    nustools__studentCard().style.width = "fit-content";
+    nustools__studentCard().style.padding = "2rem";
 
-      const downloadImage = nustools__createbutton("دانلود عکس کارت");
-      downloadImage.addEventListener("click", () =>
-        screenshot(
-          nustools__studentCard(),
-          "student-card_bustan.nustools.png",
-          { pixelRatio: 2.5 }
-        )
-      );
+    const downloadImage = nustools__createbutton("دانلود عکس کارت");
+    downloadImage.addEventListener("click", () =>
+      screenshot(nustools__studentCard(), "student-card_bustan.nustools.png", {
+        pixelRatio: 2.5,
+      })
+    );
 
-      nustools__boxHeader().append(downloadImage);
+    nustools__boxHeader().append(downloadImage);
 
-      (
-        nustools__studentCard().querySelector(
-          "table#studentcard"
-        ) as HTMLElement
-      ).style.width = "fit-content";
+    (
+      nustools__studentCard().querySelector("table#studentcard") as HTMLElement
+    ).style.width = "fit-content";
 
-      const tr = nustools__studentCard().querySelector(
-        "table#studentcard > tbody > tr"
-      )! as HTMLElement;
-      assignStyle(tr, {
-        display: "flex",
-        flexDirection: "column-reverse",
+    const tr = nustools__studentCard().querySelector(
+      "table#studentcard > tbody > tr"
+    )! as HTMLElement;
+    assignStyle(tr, {
+      display: "flex",
+      flexDirection: "column-reverse",
+    });
+
+    assignStyle(tr.firstElementChild as HTMLElement, {
+      borderLeft: "0",
+      borderTop: "3px solid #0e0101",
+    });
+
+    nustools__studentCard()
+      .querySelectorAll(".column")
+      .forEach((item, i) => {
+        (item as HTMLElement).style.setProperty(
+          "font-size",
+          "12px",
+          "important"
+        );
+
+        if (i === 0) {
+          (item.querySelector("div.barcode") as HTMLElement).style.paddingTop =
+            "unset";
+        }
+
+        if (i === 1) {
+          const detailsChildren = item.querySelector("div.details")?.children!;
+          for (let i = 0; i < detailsChildren?.length; i++) {
+            const detailsItem = detailsChildren[i] as HTMLElement;
+            detailsItem.style.paddingTop = "0.5px";
+            detailsItem.style.fontSize = "unset";
+          }
+        }
       });
 
-      assignStyle(tr.firstElementChild as HTMLElement, {
-        borderLeft: "0",
-        borderTop: "3px solid #0e0101",
-      });
+    aspectRatioFix(nustools__cardImage());
 
-      nustools__studentCard()
-        .querySelectorAll(".column")
-        .forEach((item, i) => {
-          (item as HTMLElement).style.setProperty(
-            "font-size",
-            "12px",
-            "important"
-          );
-
-          if (i === 0) {
-            (
-              item.querySelector("div.barcode") as HTMLElement
-            ).style.paddingTop = "unset";
-          }
-
-          if (i === 1) {
-            const detailsChildren =
-              item.querySelector("div.details")?.children!;
-            for (let i = 0; i < detailsChildren?.length; i++) {
-              const detailsItem = detailsChildren[i] as HTMLElement;
-              detailsItem.style.paddingTop = "0.5px";
-              detailsItem.style.fontSize = "unset";
-            }
-          }
-        });
-
-      aspectRatioFix(nustools__cardImage());
-
-      (
-        nustools__studentCard().querySelector("div.qr-code") as HTMLElement
-      ).style.top = "125px";
-    }
-  });
+    (
+      nustools__studentCard().querySelector("div.qr-code") as HTMLElement
+    ).style.top = "125px";
+  }
   //#endregion
 
   //#region صفحه نظرسنجی استادان
-  waitForDocument(() => {
-    if (nustools__surveyTable()) {
-      const surveySelectAllRow = document.createElement("tr");
-      surveySelectAllRow.style.display = "table-row";
-      surveySelectAllRow.style.height = "40px";
-      surveySelectAllRow.style.setProperty("font-size", "18px", "important");
+  function SurveyPage(): void {
+    const surveySelectAllRow = document.createElement("tr");
+    surveySelectAllRow.style.display = "table-row";
+    surveySelectAllRow.style.height = "40px";
+    surveySelectAllRow.style.setProperty("font-size", "18px", "important");
 
-      surveySelectAllRow.innerHTML = `
+    surveySelectAllRow.innerHTML = `
         <th style="width:30px;text-align:center;vertical-align:bottom;">*</th>
         <th style="width:400px;text-align:center">
           پرکردن خودکار (افزونه NUSTools)
@@ -350,99 +337,116 @@ function main(): void {
           .join("")}
         `;
 
-      assignStyle(surveySelectAllRow);
+    assignStyle(surveySelectAllRow);
 
-      const tbody = nustools__surveyTable().querySelector("tbody")!;
-      tbody.lastElementChild?.remove();
-      tbody.prepend(surveySelectAllRow);
+    const tbody = nustools__surveyTable().querySelector("tbody")!;
+    tbody.lastElementChild?.remove();
+    tbody.prepend(surveySelectAllRow);
 
-      surveySelectAllRow
-        .querySelectorAll("p[id*='SurveyQuestionID_0']")
-        .forEach((element) =>
-          element.addEventListener("click", (e) => {
-            e.preventDefault();
-            const score = element.id.split("")[element.id.length - 1];
-            for (let i = 1; i < 50; i++) {
-              const checkbox = document.getElementById(
-                `SurveyQuestionID_${i}_${score}`
-              );
-              if (checkbox) checkbox.click();
-            }
-          })
-        );
-    }
-  });
+    surveySelectAllRow
+      .querySelectorAll("p[id*='SurveyQuestionID_0']")
+      .forEach((element) =>
+        element.addEventListener("click", (e) => {
+          e.preventDefault();
+          const score = element.id.split("")[element.id.length - 1];
+          for (let i = 1; i < 50; i++) {
+            const checkbox = document.getElementById(
+              `SurveyQuestionID_${i}_${score}`
+            );
+            if (checkbox) checkbox.click();
+          }
+        })
+      );
+  }
   //#endregion
 
   //#region صفحه کارت امتحانات
-  waitForDocument(() => {
-    if (nustools__examCard()) {
-      assignStyle(nustools__examCard(), {
-        width: "794px",
-        height: "1123px",
-        padding: "2rem",
-      });
+  function ExamCardPage(): void {
+    assignStyle(nustools__examCard(), {
+      width: "fit-content",
+      padding: "2rem",
+    });
 
-      const downloadImage = nustools__createbutton("دانلود کارت امتحانات");
-      downloadImage.addEventListener("click", () =>
-        screenshot(nustools__examCard(), "exam-card_bustan.nustools.png")
-      );
+    const downloadImage = nustools__createbutton("دانلود کارت امتحانات");
+    downloadImage.addEventListener("click", () =>
+      screenshot(nustools__examCard(), "exam-card_bustan.nustools.png")
+    );
 
-      nustools__boxHeader().style.marginBottom = "2rem";
-      nustools__boxHeader().innerHTML = "";
-      nustools__boxHeader().append(downloadImage);
+    nustools__boxHeader().style.marginBottom = "2rem";
+    nustools__boxHeader().innerHTML = "";
+    nustools__boxHeader().append(downloadImage);
 
-      const examCardChildren = nustools__examCard()?.children!;
+    const examCardChildren = nustools__examCard()?.children!;
 
-      for (let i = 0; i < examCardChildren.length; i++) {
-        const item = examCardChildren[i] as HTMLElement;
-        item.style.fontSize = "16px";
-        item.style.width = "unset";
-        item.style.maxWidth = "800px";
+    for (let i = 0; i < examCardChildren.length; i++) {
+      const item = examCardChildren[i] as HTMLElement;
+      item.style.fontSize = "16px";
+      item.style.width = "unset";
+      item.style.maxWidth = "800px";
 
-        if (i === 1) {
-          const image = item.querySelector("img") as HTMLImageElement;
-          aspectRatioFix(image);
-          image.style.height = "100%";
-          image.style.width = "100px";
-        }
+      if (i === 1) {
+        const image = item.querySelector("img") as HTMLImageElement;
+        aspectRatioFix(image);
+        image.style.height = "100%";
+        image.style.width = "100px";
+      }
 
-        if (i === 2) {
-          item.style.setProperty("font-size", "12px", "important");
-          item
-            .querySelectorAll("tbody > * > *")
-            .forEach((cell) => ((cell as HTMLElement).style.padding = "5px"));
+      if (i === 2) {
+        item.style.setProperty("font-size", "12px", "important");
+        item
+          .querySelectorAll("tbody > * > *")
+          .forEach((cell) => ((cell as HTMLElement).style.padding = "5px"));
 
-          item
-            .querySelectorAll("tbody > tr > td:nth-child(3)")
-            .forEach((item) => item.remove());
+        item
+          .querySelectorAll("tbody > tr > td:nth-child(3)")
+          .forEach((item) => item.remove());
 
-          item
-            .querySelectorAll("tbody > tr > td:nth-child(10)")
-            .forEach((item) => item.remove());
-        }
+        item
+          .querySelectorAll("tbody > tr > td:nth-child(10)")
+          .forEach((item) => item.remove());
+      }
 
-        if (i === 3) {
-          item.style.setProperty("display", "none", "important");
-        }
+      if (i === 3) {
+        item.style.setProperty("display", "none", "important");
       }
     }
+  }
+  //#endregion
+
+  //#region Observing the document for changes,
+  // then deciding what do to based on the elements of the page.
+  waitForDocument(() => {
+    addDropdownItems();
+
+    if (nustools__timetable()) CoursesViewPage();
+
+    if (nustools__grid()?.value === "SER_Course_For_Student") CoursesPage();
+
+    if (nustools__studentCard()) StudentCardPage();
+
+    if (nustools__surveyTable()) SurveyPage();
+
+    if (nustools__examCard()) ExamCardPage();
   });
   //#endregion
 }
 
 //#region Trying to inject the `page_inject.js` file via prepending a `script` tag with the file as the `src`.
-try {
-  chrome.runtime.sendMessage({
+chrome.runtime.sendMessage(
+  {
     action: "injectPageScript",
     file: "page_inject.js",
-  });
-} catch (e) {
-  const script = document.createElement("script");
-  script.src = chrome.runtime.getURL("page_inject.js");
-  script.onload = () => script.remove();
-  (document.head || document.documentElement).prepend(script);
-}
+  },
+  () => {
+    if (chrome.runtime.lastError) {
+      const script = document.createElement("script");
+      script.src = chrome.runtime.getURL("page_inject.js");
+      script.onload = () => script.remove();
+      (document.head || document.documentElement).prepend(script);
+    }
+  }
+);
+
 //#endregion
 
 //#region This is the event listener for fetches on the page. Check `page_inject.js` file.
