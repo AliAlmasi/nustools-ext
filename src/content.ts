@@ -43,10 +43,18 @@ function main(): void {
   /**
    * This function is used to assign and apply style objects to HTML elements.
    * @param element Element Which the styles will be assigned to.
-   * @param styleObject Object of styles which will be assigned to the element. If not defined, the default style object will be assigned.
+   * @param styleObjects Array of styleobjects which will be assigned to the element. If not defined, the default style object will be assigned.
    */
-  const assignStyle = (element: HTMLElement, styleObject = style.default) =>
-    Object.assign(element?.style, styleObject);
+  const assignStyles = (
+    element: HTMLElement,
+    ...styleObjects: Array<Partial<CSSStyleDeclaration>>
+  ) => {
+    if (!styleObjects) Object.assign(element?.style, style.default);
+
+    for (let i = 0; i < styleObjects.length; i++) {
+      Object.assign(element?.style, styleObjects[i]);
+    }
+  };
 
   /**
    * This function is used to assign the aspect ratio of 3x4 on the input element.
@@ -118,7 +126,7 @@ function main(): void {
   const nustools__createbutton = (textContent = ""): HTMLButtonElement => {
     const button = document.createElement("button");
     button.textContent = textContent;
-    assignStyle(button, style.button);
+    assignStyles(button, style.button);
     button.style.setProperty("font-size", "18px", "important");
     return button;
   };
@@ -283,12 +291,12 @@ function main(): void {
     const tr = nustools__studentCard().querySelector(
       "table#studentcard > tbody > tr",
     )! as HTMLElement;
-    assignStyle(tr, {
+    assignStyles(tr, {
       display: "flex",
       flexDirection: "column-reverse",
     });
 
-    assignStyle(tr.firstElementChild as HTMLElement, {
+    assignStyles(tr.firstElementChild as HTMLElement, {
       borderLeft: "0",
       borderTop: "3px solid #0e0101",
     });
@@ -353,7 +361,7 @@ function main(): void {
           .join("")}
         `;
 
-    assignStyle(surveySelectAllRow);
+    assignStyles(surveySelectAllRow);
 
     const tbody = nustools__surveyTable().querySelector("tbody")!;
     tbody.lastElementChild?.remove();
@@ -378,7 +386,7 @@ function main(): void {
 
   //#region صفحه کارت امتحانات
   function ExamCardPage(): void {
-    assignStyle(nustools__examCard(), {
+    assignStyles(nustools__examCard(), {
       width: "fit-content",
       padding: "2rem",
     });
@@ -476,7 +484,7 @@ function main(): void {
           item.remove();
       });
 
-    assignStyle(tbody.querySelector("#avg")!);
+    assignStyles(tbody.querySelector("#avg")!);
 
     const toolbar = nustools__gridToolbar();
     toolbar.innerHTML = "";
