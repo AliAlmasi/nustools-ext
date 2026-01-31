@@ -87,8 +87,11 @@ function main(): void {
           quality: 1,
           pixelRatio: 3,
         },
-        options
-      )
+        // ! This was for Firefox (MV3) to work. It did work, but the problem was not this "skipFonts" property.
+        // ! The problem was that not even html-to-image, but XLSX also didn't work in Firefox (tested with MV3 -> manifest file modified -> background.scripts)
+        // Object.assign({ skipFonts: true }, options)
+        Object.assign({}, options),
+      ),
     ).then((data) => {
       const link = document.createElement("a");
       link.download = filename;
