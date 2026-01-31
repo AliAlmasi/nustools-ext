@@ -498,6 +498,38 @@ function main(): void {
   }
   //#endregion
 
+  //#region صفحه حضور و غیاب
+  function attendancePage(): void {
+    const table = nustools__gridTable();
+    const tbody = table?.children[2] as HTMLElement;
+
+    tbody.style.pointerEvents = "none";
+    const blockClicks = (e: Event) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      return false;
+    };
+
+    tbody.childNodes.forEach((row) => {
+      if (parseInt(row.childNodes[4].textContent!) >= 3)
+        (row as HTMLElement).style.color = "#a60000";
+
+      row.addEventListener("click", blockClicks, true);
+    });
+
+    const toolbar = nustools__gridToolbar();
+    const text = document.createElement("span");
+    text.textContent = "سطر های قرمز دارای 3 غیبت یا بیشتر هستند (NUSTools)";
+    assignStyles(text, style.text, style.label);
+    text.style.setProperty("font-size", style.text.fontSize!, "important");
+
+    toolbar.innerHTML = "";
+    toolbar.style.gap = "1rem";
+    toolbar.append(text);
+  }
+  //#endregion
+
   //#region Observing the document for changes,
   // then deciding what do to based on the elements of the page.
   waitForDocument(() => {
@@ -505,16 +537,25 @@ function main(): void {
 
     if (nustools__timetable()) CoursesViewPage();
 
-    if (nustools__grid()?.value === "SER_Course_For_Student") CoursesPage();
-
     if (nustools__studentCard()) StudentCardPage();
 
     if (nustools__surveyTable()) SurveyPage();
 
     if (nustools__examCard()) ExamCardPage();
 
-    if (nustools__grid()?.value === "SER_CourseGroup_Survey_Student")
-      scoresPage();
+    switch (nustools__grid()?.value) {
+      case "SER_Course_For_Student":
+        CoursesPage();
+        break;
+
+      case "SER_CourseGroup_Survey_Student":
+        scoresPage();
+        break;
+
+      case "StudentAttendanceList":
+        attendancePage();
+        break;
+    }
   });
   //#endregion
 }
