@@ -27,6 +27,17 @@ function main(): void {
       border: "none",
       borderRadius: "10px",
     },
+    text: {
+      color: "#10438F",
+      fontWeight: "700",
+      fontSize: "16px",
+      userSelect: "none",
+    },
+    label: {
+      border: "1px solid #10438F",
+      padding: "3px 6px",
+      borderRadius: "5px",
+    },
   };
 
   /**
