@@ -77,7 +77,7 @@ function main(): void {
   const screenshot = (
     element: HTMLElement,
     filename: string,
-    options?: Partial<screenshotOptions>
+    options?: Partial<screenshotOptions>,
   ) => {
     toPng(
       element,
@@ -121,10 +121,12 @@ function main(): void {
   const nustools__grid = (): HTMLInputElement =>
     document.querySelector("input[type='hidden']#gridmodelname")!;
   const nustools__gridToolbar = (): HTMLDivElement =>
-    document.querySelector(".k-grid-toolbar")!;
+    document.querySelector("div.k-grid-toolbar")!;
+  const nustools__gridTable = (): HTMLTableElement =>
+    document.querySelector("table.k-selectable[role='grid']")!;
   const nustools__studentCard = (): HTMLTableElement =>
     document.querySelector(
-      "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)"
+      "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)",
     )!;
   const nustools__cardImage = (): HTMLTableElement =>
     document.querySelector("#studentcard .person-image img")!;
@@ -134,7 +136,7 @@ function main(): void {
     document.querySelector("input[type='hidden']#SelectedSER_CourseGroupIDs")!;
   const nustools__examCard = (): HTMLDivElement =>
     document.querySelector(
-      "#divContainer > div:nth-child(5)[align='center']:not([class])"
+      "#divContainer > div:nth-child(5)[align='center']:not([class])",
     )!;
   const nustools__boxHeader = (): HTMLDivElement =>
     document.querySelector("#divContainer > div.box-header")!;
@@ -144,7 +146,7 @@ function main(): void {
   //#region منو پروفایل بالای صفحه
   function addDropdownItems(): void {
     const dropdown = document.querySelector(
-      "div.dropdown-menu > ul.list-unstyled"
+      "div.dropdown-menu > ul.list-unstyled",
     );
     if (dropdown) {
       if (dropdown.querySelector("div#added-by-nustools-ext")) return;
@@ -173,7 +175,7 @@ function main(): void {
   //#region صفحه چاپ انتخاب واحد
   function CoursesViewPage(): void {
     const header = document.querySelector(
-      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header"
+      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header",
     )! as HTMLElement;
     header.innerHTML = "";
     Object.assign(header.style, {
@@ -182,7 +184,7 @@ function main(): void {
     });
 
     const tbody = document.querySelector(
-      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody"
+      "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody",
     )!;
 
     const copyTimeTable = nustools__createbutton("کپی جدول زمانی");
@@ -202,12 +204,12 @@ function main(): void {
       e.preventDefault();
       XlsxWriteFile(
         XlsxUtils.table_to_book(tbody),
-        "timetable_bustan.nustools.xlsx"
+        "timetable_bustan.nustools.xlsx",
       );
     });
 
     const sendToNusButton = nustools__createbutton(
-      "ارسال به برنامه‌ساز NUSTools"
+      "ارسال به برنامه‌ساز NUSTools",
     );
     sendToNusButton.addEventListener("click", (e) => {
       e.preventDefault();
@@ -231,15 +233,15 @@ function main(): void {
       e.preventDefault();
       XlsxWriteFile(
         XlsxUtils.table_to_book(nustools__table()),
-        "course_groups_bustan.nustools.xlsx"
+        "course_groups_bustan.nustools.xlsx",
       );
     });
 
     const sendToNusButton = nustools__createbutton(
-      "ارسال به پیش‌انتخاب واحد NUSTools"
+      "ارسال به پیش‌انتخاب واحد NUSTools",
     );
     sendToNusButton.addEventListener("click", (e) =>
-      alert("این قابلیت در دست توسعه است.")
+      alert("این قابلیت در دست توسعه است."),
     );
 
     toolbar.appendChild(downloadButton);
@@ -258,7 +260,7 @@ function main(): void {
     downloadImage.addEventListener("click", () =>
       screenshot(nustools__studentCard(), "student-card_bustan.nustools.png", {
         pixelRatio: 2.5,
-      })
+      }),
     );
 
     nustools__boxHeader().append(downloadImage);
@@ -268,7 +270,7 @@ function main(): void {
     ).style.width = "fit-content";
 
     const tr = nustools__studentCard().querySelector(
-      "table#studentcard > tbody > tr"
+      "table#studentcard > tbody > tr",
     )! as HTMLElement;
     assignStyle(tr, {
       display: "flex",
@@ -286,7 +288,7 @@ function main(): void {
         (item as HTMLElement).style.setProperty(
           "font-size",
           "12px",
-          "important"
+          "important",
         );
 
         if (i === 0) {
@@ -335,7 +337,7 @@ function main(): void {
                   style="cursor:pointer;margin:auto 0;height:100%"
                 >${n}</p>
               </th>
-            `
+            `,
           )
           .join("")}
         `;
@@ -354,11 +356,11 @@ function main(): void {
           const score = element.id.split("")[element.id.length - 1];
           for (let i = 1; i < 50; i++) {
             const checkbox = document.getElementById(
-              `SurveyQuestionID_${i}_${score}`
+              `SurveyQuestionID_${i}_${score}`,
             );
             if (checkbox) checkbox.click();
           }
-        })
+        }),
       );
   }
   //#endregion
@@ -372,7 +374,7 @@ function main(): void {
 
     const downloadImage = nustools__createbutton("دانلود کارت امتحانات");
     downloadImage.addEventListener("click", () =>
-      screenshot(nustools__examCard(), "exam-card_bustan.nustools.png")
+      screenshot(nustools__examCard(), "exam-card_bustan.nustools.png"),
     );
 
     nustools__boxHeader().style.marginBottom = "2rem";
@@ -447,7 +449,7 @@ chrome.runtime.sendMessage(
       script.onload = () => script.remove();
       (document.head || document.documentElement).prepend(script);
     }
-  }
+  },
 );
 
 //#endregion
