@@ -418,6 +418,67 @@ function main(): void {
   }
   //#endregion
 
+  //#region صفحه نمره موقت
+  function scoresPage(): void {
+    const averageRow = (avg: number) => `
+      <td role="gridcell" id="avg" colspan="999" onclick="(()=>null)()">
+        <p style="font-size:16px;margin:10px">
+          میانگین نمره: <span style="font-size:inherit">${avg.toString()}</span>
+        </p>
+      </td>
+    `;
+
+    const table = nustools__gridTable();
+    const tbody = table?.children[2];
+
+    let courses: Record<string, { score: number; unit: number }> = {};
+
+    tbody.childNodes.forEach((row) => {
+      const thisScore = row.childNodes[0].textContent!;
+      if (!Number.isNaN(parseFloat(thisScore))) {
+        const name = row.childNodes[2].textContent?.toString().trim()!;
+        const score = parseFloat(thisScore);
+        const unit = parseFloat(row.childNodes[4].textContent!);
+
+        courses[name] = { score, unit };
+      }
+    });
+
+    let totalScoreTimesUnit = 0;
+    let totalUnits = 0;
+
+    for (const course of Object.values(courses)) {
+      totalScoreTimesUnit += course.score * course.unit;
+      totalUnits += course.unit;
+    }
+
+    const weightedAverage: Readonly<number> = totalScoreTimesUnit / totalUnits;
+
+    const averageElement = document.createElement("tr");
+    averageElement.innerHTML = averageRow(weightedAverage);
+
+    tbody.append(averageElement);
+
+    if (tbody.querySelectorAll("#avg").length > 1)
+      tbody.querySelectorAll("#avg").forEach((item) => {
+        for (let i = tbody.querySelectorAll("#avg").length; i > 1; --i)
+          item.remove();
+      });
+
+    assignStyle(tbody.querySelector("#avg")!);
+
+    const toolbar = nustools__gridToolbar();
+    toolbar.innerHTML = "";
+
+    const downloadImage = nustools__createbutton("دانلود عکس جدول");
+    downloadImage.addEventListener("click", () => {
+      screenshot(table, "temp-scores_bustan.nustools.png");
+    });
+
+    toolbar.append(downloadImage);
+  }
+  //#endregion
+
   //#region Observing the document for changes,
   // then deciding what do to based on the elements of the page.
   waitForDocument(() => {
@@ -432,6 +493,9 @@ function main(): void {
     if (nustools__surveyTable()) SurveyPage();
 
     if (nustools__examCard()) ExamCardPage();
+
+    if (nustools__grid()?.value === "SER_CourseGroup_Survey_Student")
+      scoresPage();
   });
   //#endregion
 }
