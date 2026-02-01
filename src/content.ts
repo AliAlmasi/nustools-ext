@@ -483,10 +483,13 @@ function main(): void {
 
   //#region صفحه نمره موقت
   function scoresPage(): void {
-    const averageRow = (avg: number) => `
-      <td role="gridcell" id="avg" colspan="999" onclick="(()=>null)()">
+    const averageRow = (avg: string) => `
+      <td role="gridcell" id="avg" colspan="8" onclick="(()=>null)()">
         <p style="font-size:16px;margin:10px">
-          میانگین نمره: <span style="font-size:inherit">${avg.toString()}</span>
+          میانگین نمرات: <span style="font-size:inherit">${avg}</span>
+        </p>
+        <p style="font-size: 14px;margin: 10px;">
+          این میانگین از نمراتی‌ست که تاکنون اعلام شده‌اند (NUSTools)
         </p>
       </td>
     `;
