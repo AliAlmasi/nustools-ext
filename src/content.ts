@@ -89,9 +89,9 @@ function main(): void {
 
   /**
    *
-   * @param element Element which the screenshot will be taken from
-   * @param filename
-   * @param options
+   * @param element Element which the screenshot will be taken from.
+   * @param filename Filename of the screenshot image file.
+   * @param options Screenshot options object.
    */
   const screenshot = (
     element: HTMLElement,
@@ -121,6 +121,7 @@ function main(): void {
 
   /**
    * This function creates a button element with the custom `button` styles assigned.
+   * @param textContent The text label of the created button element.
    * @returns The created button element.
    */
   const nustools__createbutton = (textContent = ""): HTMLButtonElement => {
@@ -131,32 +132,69 @@ function main(): void {
     return button;
   };
 
+  /**
+   * This function blocks click events of the specified element.
+   * @param element The element which click events will be blocked.
+   */
+  const blockClicks = (element: HTMLElement | Element) => {
+    if (!element) throw new Error("Element not specified");
+
+    element.addEventListener(
+      "click",
+      (e: Event) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        return false;
+      },
+      true,
+    );
+  };
+
+  /**
+   * This function is used to generate filename with a NUSTools specific filename pattern.
+   * @param name Name of the file being downloaded. (e.g: timetable).
+   * @param type Specifing the file format. Only XLSX (Excel) and PNG (Image) for now.
+   * @returns The full string of the generated filename.
+   */
+  const generateFilename = (name: string, type: "png" | "xlsx"): string =>
+    `${name.replaceAll(" ", "-")}_bustan.nustools.${type}`;
+
   //#endregion
 
   //#region Elements used from Bustan
 
   const nustools__table = (): HTMLTableElement =>
     document.querySelector("table.k-selectable[role='grid']")!;
+
   const nustools__grid = (): HTMLInputElement =>
     document.querySelector("input[type='hidden']#gridmodelname")!;
+
   const nustools__gridToolbar = (): HTMLDivElement =>
     document.querySelector("div.k-grid-toolbar")!;
+
   const nustools__gridTable = (): HTMLTableElement =>
     document.querySelector("table.k-selectable[role='grid']")!;
+
   const nustools__studentCard = (): HTMLTableElement =>
     document.querySelector(
       "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)",
     )!;
+
   const nustools__cardImage = (): HTMLTableElement =>
     document.querySelector("#studentcard .person-image img")!;
+
   const nustools__surveyTable = (): HTMLTableElement =>
     document.querySelector("#tblSER_CourseGroup_SurveyQuestion_Student")!;
+
   const nustools__timetable = (): HTMLInputElement =>
     document.querySelector("input[type='hidden']#SelectedSER_CourseGroupIDs")!;
+
   const nustools__examCard = (): HTMLDivElement =>
     document.querySelector(
       "#divContainer > div:nth-child(5)[align='center']:not([class])",
     )!;
+
   const nustools__boxHeader = (): HTMLDivElement =>
     document.querySelector("#divContainer > div.box-header")!;
 
@@ -193,6 +231,7 @@ function main(): void {
 
   //#region صفحه چاپ انتخاب واحد
   function CoursesViewPage(): void {
+    // TODO: use nustools selector functions
     const header = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header",
     )! as HTMLElement;
@@ -202,6 +241,7 @@ function main(): void {
       gap: "1rem",
     });
 
+    // TODO: use nustools selector functions
     const tbody = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody",
     )!;
@@ -223,7 +263,7 @@ function main(): void {
       e.preventDefault();
       XlsxWriteFile(
         XlsxUtils.table_to_book(tbody),
-        "timetable_bustan.nustools.xlsx",
+        generateFilename("timetable", "xlsx"),
       );
     });
 
@@ -252,7 +292,7 @@ function main(): void {
       e.preventDefault();
       XlsxWriteFile(
         XlsxUtils.table_to_book(nustools__table()),
-        "course_groups_bustan.nustools.xlsx",
+        generateFilename("course groups", "xlsx"),
       );
     });
 
@@ -277,9 +317,13 @@ function main(): void {
 
     const downloadImage = nustools__createbutton("دانلود عکس کارت");
     downloadImage.addEventListener("click", () =>
-      screenshot(nustools__studentCard(), "student-card_bustan.nustools.png", {
-        pixelRatio: 2.5,
-      }),
+      screenshot(
+        nustools__studentCard(),
+        generateFilename("student card", "png"),
+        {
+          pixelRatio: 2.5,
+        },
+      ),
     );
 
     nustools__boxHeader().append(downloadImage);
@@ -393,7 +437,7 @@ function main(): void {
 
     const downloadImage = nustools__createbutton("دانلود کارت امتحانات");
     downloadImage.addEventListener("click", () =>
-      screenshot(nustools__examCard(), "exam-card_bustan.nustools.png"),
+      screenshot(nustools__examCard(), generateFilename("exam card", "png")),
     );
 
     nustools__boxHeader().style.marginBottom = "2rem";
@@ -474,7 +518,8 @@ function main(): void {
     const weightedAverage: Readonly<number> = totalScoreTimesUnit / totalUnits;
 
     const averageElement = document.createElement("tr");
-    averageElement.innerHTML = averageRow(weightedAverage);
+    averageElement.innerHTML = averageRow(weightedAverage.toFixed(2));
+    blockClicks(averageElement);
 
     tbody.append(averageElement);
 
@@ -484,14 +529,14 @@ function main(): void {
           item.remove();
       });
 
-    assignStyles(tbody.querySelector("#avg")!);
+    assignStyles(tbody.querySelector("#avg")!, style.text);
 
     const toolbar = nustools__gridToolbar();
     toolbar.innerHTML = "";
 
     const downloadImage = nustools__createbutton("دانلود عکس جدول");
     downloadImage.addEventListener("click", () => {
-      screenshot(table, "temp-scores_bustan.nustools.png");
+      screenshot(table, generateFilename("temp scores", "png"));
     });
 
     toolbar.append(downloadImage);
@@ -504,18 +549,12 @@ function main(): void {
     const tbody = table?.children[2] as HTMLElement;
 
     tbody.style.pointerEvents = "none";
-    const blockClicks = (e: Event) => {
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      e.preventDefault();
-      return false;
-    };
 
     tbody.childNodes.forEach((row) => {
       if (parseInt(row.childNodes[4].textContent!) >= 3)
         (row as HTMLElement).style.color = "#a60000";
 
-      row.addEventListener("click", blockClicks, true);
+      blockClicks(row as HTMLElement);
     });
 
     const toolbar = nustools__gridToolbar();
