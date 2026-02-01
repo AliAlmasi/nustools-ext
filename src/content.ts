@@ -231,7 +231,7 @@ function main(): void {
 
   //#region صفحه چاپ انتخاب واحد
   function CoursesViewPage(): void {
-    // TODO: use nustools selector functions
+    // couldn't use the nustools selectors
     const header = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header",
     )! as HTMLElement;
@@ -241,7 +241,7 @@ function main(): void {
       gap: "1rem",
     });
 
-    // TODO: use nustools selector functions
+    // couldn't use the nustools selectors
     const tbody = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody",
     )!;
@@ -575,6 +575,13 @@ function main(): void {
   //#region Observing the document for changes,
   // then deciding what do to based on the elements of the page.
   waitForDocument(() => {
+    (() =>
+      (document.querySelector("div#divTreeView > p")!.outerHTML = `
+      <p style="margin:10px;text-align:center;color:#10438F;font-weight:700;font-size:16px;user-select:none">
+        افزونه ابزار های بوستان (NUSTools) بارگذاری شد!
+      </p>
+    `))();
+
     addDropdownItems();
 
     if (nustools__timetable()) CoursesViewPage();
