@@ -213,17 +213,18 @@ function main(): void {
         <li>
             <a href="https://nustools.ir" class="dropdown-item" target="_blank">
                 <i id="mfa" class="fa fa-bolt"></i>
-                ابزار های بوستان (NUSTools)
+                ابزار های بوستان
             </a>
         </li>
         <li>
             <a href="#https://nustools.ir/extension/help/update" class="dropdown-item" target="_blank">
                 <i id="mfa" class="fa fa-puzzle-piece"></i>
-                بروزرسانی افزونه (NUSTools)
+                بروزرسانی افزونه
             </a>
         </li>
       `;
 
+      dropdown?.lastElementChild?.remove();
       dropdown.append(element);
     }
   }
