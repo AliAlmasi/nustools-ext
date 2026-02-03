@@ -230,6 +230,31 @@ function main(): void {
   }
   //#endregion
 
+  //#region منوی بغل
+  function sideMenu(): void {
+    const treeview = document.querySelector("div#divTreeView")! as HTMLElement;
+
+    const label = treeview.querySelector("p")!;
+    label.outerHTML = `
+      <p style="margin:10px;text-align:center;color:#10438F;font-weight:700;font-size:18px;user-select:none">
+        افزونه ابزار های بوستان (NUSTools) بارگذاری شد!
+      </p>
+    `;
+
+    const sidebarMenu = treeview.querySelector(
+      "ul.sidebar-menu",
+    )! as HTMLElement;
+
+    const menuItems = Array.from(sidebarMenu.children) as HTMLElement[];
+
+    ["راهنما اطلاعيه و تغييرات", "آموزش‌هاي آزاد دانشجو"].forEach((i) =>
+      menuItems.forEach((item) =>
+        item.textContent.includes(i) ? item.remove() : null,
+      ),
+    );
+  }
+  //#endregion
+
   //#region صفحه چاپ انتخاب واحد
   function CoursesViewPage(): void {
     // couldn't use the nustools selectors
@@ -576,14 +601,8 @@ function main(): void {
   //#region Observing the document for changes,
   // then deciding what do to based on the elements of the page.
   waitForDocument(() => {
-    (() =>
-      (document.querySelector("div#divTreeView > p")!.outerHTML = `
-      <p style="margin:10px;text-align:center;color:#10438F;font-weight:700;font-size:16px;user-select:none">
-        افزونه ابزار های بوستان (NUSTools) بارگذاری شد!
-      </p>
-    `))();
-
     addDropdownItems();
+    sideMenu();
 
     if (nustools__timetable()) CoursesViewPage();
 
