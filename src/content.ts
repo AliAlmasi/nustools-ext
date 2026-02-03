@@ -509,13 +509,19 @@ function main(): void {
 
   //#region صفحه نمره موقت
   function scoresPage(): void {
-    const averageRow = (avg: string) => `
-      <td role="gridcell" id="avg" colspan="8" onclick="(()=>null)()">
-        <p style="font-size:16px;margin:10px">
+    const averageRow = ({
+      avg,
+      passedUnits,
+      allUnits,
+    }: {
+      [key: string]: string | number;
+    }) => `
+      <td role="gridcell" id="avg-div" colspan="8">
+        <p style="font-size:16px;margin:5px">
           میانگین نمرات: <span style="font-size:inherit">${avg}</span>
         </p>
-        <p style="font-size: 14px;margin: 10px;">
-          این میانگین از نمراتی‌ست که تاکنون اعلام شده‌اند (NUSTools)
+        <p style="font-size:16px;margin:5px">
+          واحدهای پاس‌شده: <span style="font-size:inherit">${passedUnits} از ${allUnits}</span>
         </p>
       </td>
     `;
@@ -552,13 +558,13 @@ function main(): void {
 
     tbody.append(averageElement);
 
-    if (tbody.querySelectorAll("#avg").length > 1)
-      tbody.querySelectorAll("#avg").forEach((item) => {
-        for (let i = tbody.querySelectorAll("#avg").length; i > 1; --i)
+    if (tbody.querySelectorAll("#avg-div").length > 1)
+      tbody.querySelectorAll("#avg-div").forEach((item) => {
+        for (let i = tbody.querySelectorAll("#avg-div").length; i > 1; --i)
           item.remove();
       });
 
-    assignStyles(tbody.querySelector("#avg")!, style.text);
+    assignStyles(tbody.querySelector("#avg-div")!, style.text);
 
     const toolbar = nustools__gridToolbar();
     toolbar.innerHTML = "";
