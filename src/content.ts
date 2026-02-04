@@ -512,7 +512,7 @@ function main(): void {
     const averageRow = ({
       avg,
       passedUnits,
-      allUnits,
+      totalUnits,
     }: {
       [key: string]: string | number;
     }) => `
@@ -521,7 +521,7 @@ function main(): void {
           میانگین نمرات: <span style="font-size:inherit">${avg}</span>
         </p>
         <p style="font-size:16px;margin:5px">
-          واحدهای پاس‌شده: <span style="font-size:inherit">${passedUnits} از ${allUnits}</span>
+          واحدهای پاس‌شده: <span style="font-size:inherit">${passedUnits} از ${totalUnits}</span>
         </p>
       </td>
     `;
@@ -531,7 +531,7 @@ function main(): void {
 
     let courses: Record<string, { score: number; unit: number }> = {};
 
-    tbody.childNodes.forEach((row) => {
+    Array.from(tbody.children).forEach((row) => {
       const scoreTextContent = row.childNodes[0].textContent!.trim();
 
       const name = row.childNodes[2].textContent?.toString().trim()!;
@@ -541,7 +541,7 @@ function main(): void {
       courses[name] = { score, unit };
 
       if (Number.isNaN(score))
-        (row as HTMLElement)
+        row
           .querySelectorAll("td > p")
           .forEach((item) => ((item as HTMLElement).style.color = "#a60000"));
     });
@@ -558,7 +558,7 @@ function main(): void {
       if (course.score >= 10) passedUnits += course.unit;
     }
 
-    const weightedAverage: Readonly<number> = totalScoreTimesUnit / totalUnits;
+    const weightedAverage: Readonly<number> = totalScoreTimesUnit / passedUnits;
     const avg = weightedAverage.toFixed(2);
 
     const averageElement = document.createElement("tr");
