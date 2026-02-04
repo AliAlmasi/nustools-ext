@@ -532,28 +532,37 @@ function main(): void {
     let courses: Record<string, { score: number; unit: number }> = {};
 
     tbody.childNodes.forEach((row) => {
-      const thisScore = row.childNodes[0].textContent!;
-      if (!Number.isNaN(parseFloat(thisScore))) {
-        const name = row.childNodes[2].textContent?.toString().trim()!;
-        const score = parseFloat(thisScore);
-        const unit = parseFloat(row.childNodes[4].textContent!);
+      const scoreTextContent = row.childNodes[0].textContent!.trim();
 
-        courses[name] = { score, unit };
-      }
+      const name = row.childNodes[2].textContent?.toString().trim()!;
+      const score = parseFloat(scoreTextContent);
+      const unit = parseFloat(row.childNodes[4].textContent!.trim());
+
+      courses[name] = { score, unit };
+
+      if (Number.isNaN(score))
+        (row as HTMLElement)
+          .querySelectorAll("td > p")
+          .forEach((item) => ((item as HTMLElement).style.color = "#a60000"));
     });
 
     let totalScoreTimesUnit = 0;
     let totalUnits = 0;
+    let passedUnits = 0;
 
     for (const course of Object.values(courses)) {
-      totalScoreTimesUnit += course.score * course.unit;
+      if (!Number.isNaN(course.score))
+        totalScoreTimesUnit += course.score * course.unit;
       totalUnits += course.unit;
+
+      if (course.score >= 10) passedUnits += course.unit;
     }
 
     const weightedAverage: Readonly<number> = totalScoreTimesUnit / totalUnits;
+    const avg = weightedAverage.toFixed(2);
 
     const averageElement = document.createElement("tr");
-    averageElement.innerHTML = averageRow(weightedAverage.toFixed(2));
+    averageElement.innerHTML = averageRow({ avg, passedUnits, totalUnits });
     blockClicks(averageElement);
 
     tbody.append(averageElement);
