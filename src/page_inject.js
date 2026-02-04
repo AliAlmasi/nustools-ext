@@ -8,6 +8,13 @@
   }
   //#endregion
 
+  //#region MANIPULATING PAGE AS SOON AS IT LOADS
+  window.postMessage(
+    { __nustools: true, type: "page-load", url: location.href },
+    window.location.origin,
+  );
+  //#endregion
+
   //#region INJECTING MANIPULATED FETCH
   try {
     const orgFetch = window.fetch;
@@ -16,7 +23,7 @@
         const url = args[0];
         window.postMessage(
           { __nustools: true, type: "fetch", url },
-          window.location.origin
+          window.location.origin,
         );
       } catch (e) {}
       return orgFetch.apply(this, args);
@@ -35,7 +42,7 @@
         const url = args[1];
         window.postMessage(
           { __nustools: true, type: "xhr", method, url },
-          window.location.origin
+          window.location.origin,
         );
       } catch (e) {}
 

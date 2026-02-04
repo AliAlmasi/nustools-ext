@@ -213,25 +213,51 @@ function main(): void {
         <li>
             <a href="https://nustools.ir" class="dropdown-item" target="_blank">
                 <i id="mfa" class="fa fa-bolt"></i>
-                ابزار های بوستان (NUSTools)
+                ابزار های بوستان
             </a>
         </li>
         <li>
             <a href="#https://nustools.ir/extension/help/update" class="dropdown-item" target="_blank">
                 <i id="mfa" class="fa fa-puzzle-piece"></i>
-                بروزرسانی افزونه (NUSTools)
+                بروزرسانی افزونه
             </a>
         </li>
       `;
 
+      dropdown?.lastElementChild?.remove();
       dropdown.append(element);
     }
   }
   //#endregion
 
+  //#region منوی بغل
+  function sideMenu(): void {
+    const treeview = document.querySelector("div#divTreeView")! as HTMLElement;
+
+    const label = treeview.querySelector("p")!;
+    label.outerHTML = `
+      <p style="margin:10px;text-align:center;color:#10438F;font-weight:700;font-size:18px;user-select:none">
+        افزونه ابزار های بوستان (NUSTools) بارگذاری شد!
+      </p>
+    `;
+
+    const sidebarMenu = treeview.querySelector(
+      "ul.sidebar-menu",
+    )! as HTMLElement;
+
+    const menuItems = Array.from(sidebarMenu.children) as HTMLElement[];
+
+    ["راهنما اطلاعيه و تغييرات", "آموزش‌هاي آزاد دانشجو"].forEach((i) =>
+      menuItems.forEach((item) =>
+        item.textContent.includes(i) ? item.remove() : null,
+      ),
+    );
+  }
+  //#endregion
+
   //#region صفحه چاپ انتخاب واحد
   function CoursesViewPage(): void {
-    // TODO: use nustools selector functions
+    // couldn't use the nustools selectors
     const header = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.box-header",
     )! as HTMLElement;
@@ -241,7 +267,7 @@ function main(): void {
       gap: "1rem",
     });
 
-    // TODO: use nustools selector functions
+    // couldn't use the nustools selectors
     const tbody = document.querySelector(
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody",
     )!;
@@ -483,13 +509,19 @@ function main(): void {
 
   //#region صفحه نمره موقت
   function scoresPage(): void {
-    const averageRow = (avg: string) => `
-      <td role="gridcell" id="avg" colspan="8" onclick="(()=>null)()">
-        <p style="font-size:16px;margin:10px">
+    const averageRow = ({
+      avg,
+      passedUnits,
+      allUnits,
+    }: {
+      [key: string]: string | number;
+    }) => `
+      <td role="gridcell" id="avg-div" colspan="8">
+        <p style="font-size:16px;margin:5px">
           میانگین نمرات: <span style="font-size:inherit">${avg}</span>
         </p>
-        <p style="font-size: 14px;margin: 10px;">
-          این میانگین از نمراتی‌ست که تاکنون اعلام شده‌اند (NUSTools)
+        <p style="font-size:16px;margin:5px">
+          واحدهای پاس‌شده: <span style="font-size:inherit">${passedUnits} از ${allUnits}</span>
         </p>
       </td>
     `;
@@ -500,39 +532,48 @@ function main(): void {
     let courses: Record<string, { score: number; unit: number }> = {};
 
     tbody.childNodes.forEach((row) => {
-      const thisScore = row.childNodes[0].textContent!;
-      if (!Number.isNaN(parseFloat(thisScore))) {
-        const name = row.childNodes[2].textContent?.toString().trim()!;
-        const score = parseFloat(thisScore);
-        const unit = parseFloat(row.childNodes[4].textContent!);
+      const scoreTextContent = row.childNodes[0].textContent!.trim();
 
-        courses[name] = { score, unit };
-      }
+      const name = row.childNodes[2].textContent?.toString().trim()!;
+      const score = parseFloat(scoreTextContent);
+      const unit = parseFloat(row.childNodes[4].textContent!.trim());
+
+      courses[name] = { score, unit };
+
+      if (Number.isNaN(score))
+        (row as HTMLElement)
+          .querySelectorAll("td > p")
+          .forEach((item) => ((item as HTMLElement).style.color = "#a60000"));
     });
 
     let totalScoreTimesUnit = 0;
     let totalUnits = 0;
+    let passedUnits = 0;
 
     for (const course of Object.values(courses)) {
-      totalScoreTimesUnit += course.score * course.unit;
+      if (!Number.isNaN(course.score))
+        totalScoreTimesUnit += course.score * course.unit;
       totalUnits += course.unit;
+
+      if (course.score >= 10) passedUnits += course.unit;
     }
 
     const weightedAverage: Readonly<number> = totalScoreTimesUnit / totalUnits;
+    const avg = weightedAverage.toFixed(2);
 
     const averageElement = document.createElement("tr");
-    averageElement.innerHTML = averageRow(weightedAverage.toFixed(2));
+    averageElement.innerHTML = averageRow({ avg, passedUnits, totalUnits });
     blockClicks(averageElement);
 
     tbody.append(averageElement);
 
-    if (tbody.querySelectorAll("#avg").length > 1)
-      tbody.querySelectorAll("#avg").forEach((item) => {
-        for (let i = tbody.querySelectorAll("#avg").length; i > 1; --i)
+    if (tbody.querySelectorAll("#avg-div").length > 1)
+      tbody.querySelectorAll("#avg-div").forEach((item) => {
+        for (let i = tbody.querySelectorAll("#avg-div").length; i > 1; --i)
           item.remove();
       });
 
-    assignStyles(tbody.querySelector("#avg")!, style.text);
+    assignStyles(tbody.querySelector("#avg-div")!, style.text);
 
     const toolbar = nustools__gridToolbar();
     toolbar.innerHTML = "";
@@ -576,6 +617,7 @@ function main(): void {
   // then deciding what do to based on the elements of the page.
   waitForDocument(() => {
     addDropdownItems();
+    sideMenu();
 
     if (nustools__timetable()) CoursesViewPage();
 

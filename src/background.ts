@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   console.debug(
     "NUSTools: injectPageScript requested for tab",
     tabId,
-    message.file
+    message.file,
   );
 
   try {
@@ -36,17 +36,4 @@ chrome.runtime.onMessage.addListener((message, sender) => {
   } catch (err) {
     console.error("NUSTools Failed to inject page script (sync):", err);
   }
-});
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message?.action !== "reloadPage") return;
-
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    if (!tab?.id) return;
-
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => window.location.reload(),
-    });
-  });
 });
