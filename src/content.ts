@@ -1,7 +1,7 @@
 //#region Imported modules
 import { writeFile as XlsxWriteFile, utils as XlsxUtils } from "xlsx";
 import { toPng } from "html-to-image";
-import { Options as screenshotOptions } from "html-to-image/lib/types";
+import { Options as ScreenshotOptions } from "html-to-image/lib/types";
 //#endregion
 
 /**
@@ -96,7 +96,7 @@ function main(): void {
   const screenshot = (
     element: HTMLElement,
     filename: string,
-    options?: Partial<screenshotOptions>,
+    options?: Partial<ScreenshotOptions>,
   ) => {
     toPng(
       element,
@@ -106,10 +106,7 @@ function main(): void {
           quality: 1,
           pixelRatio: 3,
         },
-        // ! This was for Firefox (MV3) to work. It did work, but the problem was not this "skipFonts" property.
-        // ! The problem was that not even html-to-image, but XLSX also didn't work in Firefox (tested with MV3 -> manifest file modified -> background.scripts)
-        // Object.assign({ skipFonts: true }, options)
-        Object.assign({}, options),
+        options,
       ),
     ).then((data) => {
       const link = document.createElement("a");
@@ -124,7 +121,7 @@ function main(): void {
    * @param textContent The text label of the created button element.
    * @returns The created button element.
    */
-  const nustools__createbutton = (textContent = ""): HTMLButtonElement => {
+  const createButton = (textContent = ""): HTMLButtonElement => {
     const button = document.createElement("button");
     button.textContent = textContent;
     assignStyles(button, style.button);
@@ -162,38 +159,36 @@ function main(): void {
 
   //#endregion
 
-  //#region Elements used from Bustan
+  //#region Element Selectors
 
-  const nustools__table = (): HTMLTableElement =>
-    document.querySelector("table.k-selectable[role='grid']")!;
+  const selectors = Object.freeze({
+    table: () => document.querySelector("table.k-selectable[role='grid']"),
+    grid: () => document.querySelector("input[type='hidden']#gridmodelname"),
+    gridToolbar: () => document.querySelector("div.k-grid-toolbar"),
+    studentCard: () =>
+      document.querySelector(
+        "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)",
+      ),
+    cardImage: () => document.querySelector("#studentcard .person-image img"),
+    surveyTable: () =>
+      document.querySelector("#tblSER_CourseGroup_SurveyQuestion_Student"),
+    timetable: () =>
+      document.querySelector("input[type='hidden']#SelectedSER_CourseGroupIDs"),
+    examCard: () =>
+      document.querySelector(
+        "#divContainer > div:nth-child(5)[align='center']:not([class])",
+      ),
+    boxHeader: () => document.querySelector("#divContainer > div.box-header"),
+  });
 
-  const nustools__grid = (): HTMLInputElement =>
-    document.querySelector("input[type='hidden']#gridmodelname")!;
+  const getElement = <K extends keyof typeof selectors>(
+    key: K,
+  ): HTMLElement => {
+    const element = selectors[key]();
 
-  const nustools__gridToolbar = (): HTMLDivElement =>
-    document.querySelector("div.k-grid-toolbar")!;
-
-  const nustools__studentCard = (): HTMLTableElement =>
-    document.querySelector(
-      "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)",
-    )!;
-
-  const nustools__cardImage = (): HTMLTableElement =>
-    document.querySelector("#studentcard .person-image img")!;
-
-  const nustools__surveyTable = (): HTMLTableElement =>
-    document.querySelector("#tblSER_CourseGroup_SurveyQuestion_Student")!;
-
-  const nustools__timetable = (): HTMLInputElement =>
-    document.querySelector("input[type='hidden']#SelectedSER_CourseGroupIDs")!;
-
-  const nustools__examCard = (): HTMLDivElement =>
-    document.querySelector(
-      "#divContainer > div:nth-child(5)[align='center']:not([class])",
-    )!;
-
-  const nustools__boxHeader = (): HTMLDivElement =>
-    document.querySelector("#divContainer > div.box-header")!;
+    if (!element) throw new Error(`Selector "${key}" does not exist`);
+    else return element as HTMLElement;
+  };
 
   //#endregion
 
@@ -269,7 +264,7 @@ function main(): void {
       "#frm > div.col-lg-12.col-md-12.col-sm-12.col-xs-12 > div > div > div > div.page > div > table > tbody",
     )!;
 
-    const copyTimeTable = nustools__createbutton("کپی جدول زمانی");
+    const copyTimeTable = createButton("کپی جدول زمانی");
     copyTimeTable.addEventListener("click", (e) => {
       e.preventDefault();
       const firstElement = tbody.firstElementChild!;
@@ -281,7 +276,7 @@ function main(): void {
       });
     });
 
-    const downloadExcel = nustools__createbutton("دانلود فایل اکسل");
+    const downloadExcel = createButton("دانلود فایل اکسل");
     downloadExcel.addEventListener("click", (e) => {
       e.preventDefault();
       XlsxWriteFile(
@@ -290,9 +285,7 @@ function main(): void {
       );
     });
 
-    const sendToNusButton = nustools__createbutton(
-      "ارسال به برنامه‌ساز NUSTools",
-    );
+    const sendToNusButton = createButton("ارسال به برنامه‌ساز NUSTools");
     sendToNusButton.addEventListener("click", (e) => {
       e.preventDefault();
       alert("این قابلیت در دست توسعه است.");
@@ -306,22 +299,20 @@ function main(): void {
 
   //#region صفحه گروه‌های درسی
   function CoursesPage(): void {
-    const toolbar = nustools__gridToolbar();
+    const toolbar = getElement("gridToolbar");
     toolbar.innerHTML = "";
     toolbar.style.gap = "1rem";
 
-    const downloadButton = nustools__createbutton("دانلود فایل اکسل");
+    const downloadButton = createButton("دانلود فایل اکسل");
     downloadButton.addEventListener("click", (e) => {
       e.preventDefault();
       XlsxWriteFile(
-        XlsxUtils.table_to_book(nustools__table()),
+        XlsxUtils.table_to_book(getElement("table")),
         generateFilename("course groups", "xlsx"),
       );
     });
 
-    const sendToNusButton = nustools__createbutton(
-      "ارسال به پیش‌انتخاب واحد NUSTools",
-    );
+    const sendToNusButton = createButton("ارسال به پیش‌انتخاب واحد NUSTools");
     sendToNusButton.addEventListener("click", (e) =>
       alert("این قابلیت در دست توسعه است."),
     );
@@ -333,29 +324,27 @@ function main(): void {
 
   //#region صفحه کارت دانشجویی
   function StudentCardPage(): void {
-    nustools__boxHeader().innerHTML = "";
-    nustools__studentCard().style.margin = "0";
-    nustools__studentCard().style.width = "fit-content";
-    nustools__studentCard().style.padding = "2rem";
+    const studentCard = getElement("studentCard");
 
-    const downloadImage = nustools__createbutton("دانلود عکس کارت");
+    getElement("boxHeader").innerHTML = "";
+    studentCard.style.margin = "0";
+    studentCard.style.width = "fit-content";
+    studentCard.style.padding = "2rem";
+
+    const downloadImage = createButton("دانلود عکس کارت");
     downloadImage.addEventListener("click", () =>
-      screenshot(
-        nustools__studentCard(),
-        generateFilename("student card", "png"),
-        {
-          pixelRatio: 2.5,
-        },
-      ),
+      screenshot(studentCard, generateFilename("student card", "png"), {
+        pixelRatio: 2.5,
+      }),
     );
 
-    nustools__boxHeader().append(downloadImage);
+    getElement("boxHeader").append(downloadImage);
 
     (
-      nustools__studentCard().querySelector("table#studentcard") as HTMLElement
+      studentCard.querySelector("table#studentcard") as HTMLElement
     ).style.width = "fit-content";
 
-    const tr = nustools__studentCard().querySelector(
+    const tr = studentCard.querySelector(
       "table#studentcard > tbody > tr",
     )! as HTMLElement;
     assignStyles(tr, {
@@ -368,35 +357,28 @@ function main(): void {
       borderTop: "3px solid #0e0101",
     });
 
-    nustools__studentCard()
-      .querySelectorAll(".column")
-      .forEach((item, i) => {
-        (item as HTMLElement).style.setProperty(
-          "font-size",
-          "12px",
-          "important",
-        );
+    studentCard.querySelectorAll(".column").forEach((item, i) => {
+      (item as HTMLElement).style.setProperty("font-size", "12px", "important");
 
-        if (i === 0) {
-          (item.querySelector("div.barcode") as HTMLElement).style.paddingTop =
-            "unset";
+      if (i === 0) {
+        (item.querySelector("div.barcode") as HTMLElement).style.paddingTop =
+          "unset";
+      }
+
+      if (i === 1) {
+        const detailsChildren = item.querySelector("div.details")?.children!;
+        for (let i = 0; i < detailsChildren?.length; i++) {
+          const detailsItem = detailsChildren[i] as HTMLElement;
+          detailsItem.style.paddingTop = "0.5px";
+          detailsItem.style.fontSize = "unset";
         }
+      }
+    });
 
-        if (i === 1) {
-          const detailsChildren = item.querySelector("div.details")?.children!;
-          for (let i = 0; i < detailsChildren?.length; i++) {
-            const detailsItem = detailsChildren[i] as HTMLElement;
-            detailsItem.style.paddingTop = "0.5px";
-            detailsItem.style.fontSize = "unset";
-          }
-        }
-      });
+    aspectRatioFix(getElement("cardImage"));
 
-    aspectRatioFix(nustools__cardImage());
-
-    (
-      nustools__studentCard().querySelector("div.qr-code") as HTMLElement
-    ).style.top = "125px";
+    (studentCard.querySelector("div.qr-code") as HTMLElement).style.top =
+      "125px";
   }
   //#endregion
 
@@ -430,7 +412,7 @@ function main(): void {
 
     assignStyles(surveySelectAllRow);
 
-    const tbody = nustools__surveyTable().querySelector("tbody")!;
+    const tbody = getElement("surveyTable").querySelector("tbody")!;
     tbody.lastElementChild?.remove();
     tbody.prepend(surveySelectAllRow);
 
@@ -453,21 +435,24 @@ function main(): void {
 
   //#region صفحه کارت امتحانات
   function ExamCardPage(): void {
-    assignStyles(nustools__examCard(), {
+    const examCard = getElement("examCard");
+    const boxHeader = getElement("boxHeader");
+
+    assignStyles(examCard, {
       width: "fit-content",
       padding: "2rem",
     });
 
-    const downloadImage = nustools__createbutton("دانلود کارت امتحانات");
+    const downloadImage = createButton("دانلود کارت امتحانات");
     downloadImage.addEventListener("click", () =>
-      screenshot(nustools__examCard(), generateFilename("exam card", "png")),
+      screenshot(examCard, generateFilename("exam card", "png")),
     );
 
-    nustools__boxHeader().style.marginBottom = "2rem";
-    nustools__boxHeader().innerHTML = "";
-    nustools__boxHeader().append(downloadImage);
+    boxHeader.style.marginBottom = "2rem";
+    boxHeader.innerHTML = "";
+    boxHeader.append(downloadImage);
 
-    const examCardChildren = nustools__examCard()?.children!;
+    const examCardChildren = examCard?.children!;
 
     for (let i = 0; i < examCardChildren.length; i++) {
       const item = examCardChildren[i] as HTMLElement;
@@ -523,24 +508,32 @@ function main(): void {
       </td>
     `;
 
-    const table = nustools__table();
+    const table = getElement("table");
     const tbody = table?.children[2];
 
     let courses: Record<string, { score: number; unit: number }> = {};
 
     Array.from(tbody.children).forEach((row) => {
-      const scoreTextContent = row.childNodes[0].textContent!.trim();
+      const scoreTextContent = (
+        row as HTMLElement
+      ).childNodes[0].textContent!.trim();
 
-      const name = row.childNodes[2].textContent?.toString().trim()!;
+      const name = (row as HTMLElement).childNodes[2].textContent
+        ?.toString()
+        .trim()!;
       const score = parseFloat(scoreTextContent);
-      const unit = parseFloat(row.childNodes[4].textContent!.trim());
+      const unit = parseFloat(
+        (row as HTMLElement).childNodes[4].textContent!.trim(),
+      );
 
       courses[name] = { score, unit };
 
       if (Number.isNaN(score))
-        row
+        (row as HTMLElement)
           .querySelectorAll("td > p")
-          .forEach((item) => ((item as HTMLElement).style.color = "#a60000"));
+          .forEach(
+            (item: Element) => ((item as HTMLElement).style.color = "#a60000"),
+          );
     });
 
     let totalScoreTimesUnit = 0;
@@ -565,17 +558,17 @@ function main(): void {
     tbody.append(averageElement);
 
     if (tbody.querySelectorAll("#avg-div").length > 1)
-      tbody.querySelectorAll("#avg-div").forEach((item) => {
+      tbody.querySelectorAll("#avg-div").forEach((item: Element) => {
         for (let i = tbody.querySelectorAll("#avg-div").length; i > 1; --i)
           item.remove();
       });
 
     assignStyles(tbody.querySelector("#avg-div")!, style.text);
 
-    const toolbar = nustools__gridToolbar();
+    const toolbar = getElement("gridToolbar");
     toolbar.innerHTML = "";
 
-    const downloadImage = nustools__createbutton("دانلود عکس جدول");
+    const downloadImage = createButton("دانلود عکس جدول");
     downloadImage.addEventListener("click", () => {
       screenshot(table, generateFilename("temp scores", "png"));
     });
@@ -586,7 +579,7 @@ function main(): void {
 
   //#region صفحه حضور و غیاب
   function attendancePage(): void {
-    const table = nustools__table();
+    const table = getElement("table");
     const tbody = table?.children[2] as HTMLElement;
 
     tbody.style.pointerEvents = "none";
@@ -598,7 +591,7 @@ function main(): void {
       blockClicks(row as HTMLElement);
     });
 
-    const toolbar = nustools__gridToolbar();
+    const toolbar = getElement("gridToolbar");
     const text = document.createElement("span");
     text.textContent = "سطر های قرمز دارای 3 غیبت یا بیشتر هستند (NUSTools)";
     assignStyles(text, style.text, style.label);
@@ -616,15 +609,15 @@ function main(): void {
     addDropdownItems();
     sideMenu();
 
-    if (nustools__timetable()) CoursesViewPage();
+    if (getElement("timetable")) CoursesViewPage();
 
-    if (nustools__studentCard()) StudentCardPage();
+    if (getElement("studentCard")) StudentCardPage();
 
-    if (nustools__surveyTable()) SurveyPage();
+    if (getElement("surveyTable")) SurveyPage();
 
-    if (nustools__examCard()) ExamCardPage();
+    if (getElement("examCard")) ExamCardPage();
 
-    switch (nustools__grid()?.value) {
+    switch ((getElement("grid") as HTMLInputElement).value) {
       case "SER_Course_For_Student":
         CoursesPage();
         break;
