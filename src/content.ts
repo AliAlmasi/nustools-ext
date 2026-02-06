@@ -93,7 +93,7 @@ function main(): void {
    * @param filename Filename of the screenshot image file.
    * @param options Screenshot options object.
    */
-  const screenshot = (
+  const getScreenshot = (
     element: HTMLElement,
     filename: string,
     options?: Partial<ScreenshotOptions>,
@@ -110,10 +110,17 @@ function main(): void {
       ),
     ).then((data) => {
       const link = document.createElement("a");
-      link.download = filename;
+      link.download = generateFilename(filename, "png");
       link.href = data;
       link.click();
     });
+  };
+
+  const getExcel = (element: HTMLElement | Element, filename: string) => {
+    XlsxWriteFile(
+      XlsxUtils.table_to_book(element),
+      generateFilename(filename, "xlsx"),
+    );
   };
 
   /**
@@ -279,10 +286,7 @@ function main(): void {
     const downloadExcel = createButton("دانلود فایل اکسل");
     downloadExcel.addEventListener("click", (e) => {
       e.preventDefault();
-      XlsxWriteFile(
-        XlsxUtils.table_to_book(tbody),
-        generateFilename("timetable", "xlsx"),
-      );
+      getExcel(tbody, "timetable");
     });
 
     const sendToNusButton = createButton("ارسال به برنامه‌ساز NUSTools");
@@ -306,10 +310,7 @@ function main(): void {
     const downloadButton = createButton("دانلود فایل اکسل");
     downloadButton.addEventListener("click", (e) => {
       e.preventDefault();
-      XlsxWriteFile(
-        XlsxUtils.table_to_book(getElement("table")),
-        generateFilename("course groups", "xlsx"),
-      );
+      getExcel(getElement("table"), "course group");
     });
 
     const sendToNusButton = createButton("ارسال به پیش‌انتخاب واحد NUSTools");
@@ -333,7 +334,7 @@ function main(): void {
 
     const downloadImage = createButton("دانلود عکس کارت");
     downloadImage.addEventListener("click", () =>
-      screenshot(studentCard, generateFilename("student card", "png"), {
+      getScreenshot(studentCard, "student card", {
         pixelRatio: 2.5,
       }),
     );
@@ -445,7 +446,7 @@ function main(): void {
 
     const downloadImage = createButton("دانلود کارت امتحانات");
     downloadImage.addEventListener("click", () =>
-      screenshot(examCard, generateFilename("exam card", "png")),
+      getScreenshot(examCard, "exam card"),
     );
 
     boxHeader.style.marginBottom = "2rem";
@@ -570,7 +571,7 @@ function main(): void {
 
     const downloadImage = createButton("دانلود عکس جدول");
     downloadImage.addEventListener("click", () => {
-      screenshot(table, generateFilename("temp scores", "png"));
+      getScreenshot(table, "temp scores");
     });
 
     toolbar.append(downloadImage);
