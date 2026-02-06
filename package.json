@@ -1,7 +1,7 @@
 {
   "name": "nustools-ext",
   "private": true,
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "scripts": {
     "prebuild": "tsc --noEmit && rimraf dist .vite cache",
