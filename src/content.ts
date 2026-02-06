@@ -173,9 +173,6 @@ function main(): void {
   const nustools__gridToolbar = (): HTMLDivElement =>
     document.querySelector("div.k-grid-toolbar")!;
 
-  const nustools__gridTable = (): HTMLTableElement =>
-    document.querySelector("table.k-selectable[role='grid']")!;
-
   const nustools__studentCard = (): HTMLTableElement =>
     document.querySelector(
       "#divContainer > div:nth-child(4)[align='center']:has(table#studentcard)",
@@ -526,7 +523,7 @@ function main(): void {
       </td>
     `;
 
-    const table = nustools__gridTable();
+    const table = nustools__table();
     const tbody = table?.children[2];
 
     let courses: Record<string, { score: number; unit: number }> = {};
@@ -589,7 +586,7 @@ function main(): void {
 
   //#region صفحه حضور و غیاب
   function attendancePage(): void {
-    const table = nustools__gridTable();
+    const table = nustools__table();
     const tbody = table?.children[2] as HTMLElement;
 
     tbody.style.pointerEvents = "none";
