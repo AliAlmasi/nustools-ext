@@ -283,11 +283,11 @@ function main(): void {
       });
     });
 
-    const downloadExcel = createButton("دانلود فایل اکسل");
-    downloadExcel.addEventListener("click", (e) => {
-      e.preventDefault();
-      getExcel(tbody, "timetable");
-    });
+    // const downloadExcel = createButton("دانلود فایل اکسل");
+    // downloadExcel.addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   getExcel(tbody, "timetable");
+    // });
 
     const sendToNusButton = createButton("ارسال به برنامه‌ساز NUSTools");
     sendToNusButton.addEventListener("click", (e) => {
@@ -296,7 +296,7 @@ function main(): void {
     });
 
     header.appendChild(copyTimeTable);
-    header.appendChild(downloadExcel);
+    // header.appendChild(downloadExcel);
     header.appendChild(sendToNusButton);
   }
   //#endregion
