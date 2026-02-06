@@ -585,7 +585,7 @@ function main(): void {
     tbody.style.pointerEvents = "none";
 
     tbody.childNodes.forEach((row) => {
-      if (parseInt(row.childNodes[4].textContent!) >= 3)
+      if (parseInt(row.childNodes[4]?.textContent!) >= 3)
         (row as HTMLElement).style.color = "#a60000";
 
       blockClicks(row as HTMLElement);
@@ -609,15 +609,15 @@ function main(): void {
     addDropdownItems();
     sideMenu();
 
-    if (getElement("timetable")) CoursesViewPage();
+    if (selectors.timetable()) CoursesViewPage();
 
-    if (getElement("studentCard")) StudentCardPage();
+    if (selectors.studentCard()) StudentCardPage();
 
-    if (getElement("surveyTable")) SurveyPage();
+    if (selectors.surveyTable()) SurveyPage();
 
-    if (getElement("examCard")) ExamCardPage();
+    if (selectors.examCard()) ExamCardPage();
 
-    switch ((getElement("grid") as HTMLInputElement).value) {
+    switch ((selectors.grid() as HTMLInputElement)?.value) {
       case "SER_Course_For_Student":
         CoursesPage();
         break;
